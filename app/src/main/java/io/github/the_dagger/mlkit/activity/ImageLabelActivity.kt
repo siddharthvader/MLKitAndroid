@@ -10,13 +10,19 @@ import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import io.github.the_dagger.mlkit.R
 import io.github.the_dagger.mlkit.adapter.ImageLabelAdapter
+import io.github.the_dagger.mlkit.adapter.RecycleLabel
+import io.github.the_dagger.mlkit.adapter.RecycleLabelAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_image_label.*
+import com.google.firebase.ml.vision.label.FirebaseVisionLabel
+
+
 
 class ImageLabelActivity : BaseCameraActivity() {
 
     private var itemsList: ArrayList<Any> = ArrayList()
-    private lateinit var itemAdapter: ImageLabelAdapter
+//    private lateinit var itemAdapter: ImageLabelAdapter
+    private lateinit var itemAdapter: RecycleLabelAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +38,11 @@ class ImageLabelActivity : BaseCameraActivity() {
                 .addOnSuccessListener {
                     // Task completed successfully
                     fabProgressCircle.hide()
-                    itemsList.addAll(it)
-                    itemAdapter = ImageLabelAdapter(itemsList, false)
+                    val relabels = RecycleLabel(it);
+//                    itemsList.addAll(it)
+                    itemsList.add(relabels)
+//                    itemAdapter = ImageLabelAdapter(itemsList, false)
+                    itemAdapter = RecycleLabelAdapter(itemsList, false)
                     rvLabel.adapter = itemAdapter
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
                 }
@@ -44,7 +53,7 @@ class ImageLabelActivity : BaseCameraActivity() {
                 }
     }
 
-    private fun getLabelsFromClod(bitmap: Bitmap) {
+    private fun getLabelsFromCloud(bitmap: Bitmap) {
         val image = FirebaseVisionImage.fromBitmap(bitmap)
         val detector = FirebaseVision.getInstance()
                 .visionCloudLabelDetector
@@ -54,7 +63,8 @@ class ImageLabelActivity : BaseCameraActivity() {
                     // Task completed successfully
                     fabProgressCircle.hide()
                     itemsList.addAll(it)
-                    itemAdapter = ImageLabelAdapter(itemsList, true)
+//                    itemAdapter = ImageLabelAdapter(itemsList, true)
+                    itemAdapter = RecycleLabelAdapter(itemsList, true)
                     rvLabel.adapter = itemAdapter
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
                 }
@@ -69,7 +79,7 @@ class ImageLabelActivity : BaseCameraActivity() {
         fabProgressCircle.show()
         cameraView.captureImage { cameraKitImage ->
             // Get the Bitmap from the captured shot
-            getLabelsFromClod(cameraKitImage.bitmap)
+            getLabelsFromDevice(cameraKitImage.bitmap)
             runOnUiThread {
                 showPreview()
                 imagePreview.setImageBitmap(cameraKitImage.bitmap)
