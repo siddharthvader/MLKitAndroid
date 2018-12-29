@@ -21,7 +21,6 @@ import io.github.the_dagger.mlkit.adapter.BinLabelProcessor
 class ImageLabelActivity : BaseCameraActivity() {
 
     private var itemsList: ArrayList<Any> = ArrayList()
-//    private lateinit var itemAdapter: ImageLabelAdapter
     private lateinit var itemAdapter: RecycleLabelAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,17 +37,12 @@ class ImageLabelActivity : BaseCameraActivity() {
                 .addOnSuccessListener {
                     // Task completed successfully
                     fabProgressCircle.hide()
-//                    val relabels = RecycleLabel(it);
                     for(item in it){
                         itemsList.add(RecycleLabel(item))
                     }
-//                    itemsList.addAll(it)
-//                    val reLabels: List<Any> = ArrayList()
-//                    itemsList.add(relabels)
-//                    itemAdapter = ImageLabelAdapter(itemsList, false)
-                    val processor: BinLabelProcessor = BinLabelProcessor(itemsList)
+
+                    val processor = BinLabelProcessor(itemsList)
                     val items = processor.labels
-//                    itemAdapter = RecycleLabelAdapter(itemsList, false)
                     itemAdapter = RecycleLabelAdapter(items, false)
                     rvLabel.adapter = itemAdapter
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)

@@ -10,32 +10,16 @@ public class BinLabelProcessor {
 
     public BinLabelProcessor(List<Object> detectedObjects){
 
-        HashSet<String> usedLabels = new HashSet<>();
+        double prob = ((RecycleLabel) detectedObjects.get(0)).getConfidenceValue();
 
         for(Object o : detectedObjects){
             RecycleLabel l = (RecycleLabel) o;
-//            String bin = l.getProperBin();
-//            if(usedLabels.contains(bin))
-//                continue;
 
+            if(l.getConfidenceValue() <= prob - 0.10)
+                break;
             this.labels.add(l);
-//            usedLabels.add(bin);
         }
 
-        if(this.labels.size() > 1){
-            double prob = this.labels.get(0).getConfidenceValue();
-            List<RecycleLabel> newLabels = new ArrayList<RecycleLabel>();
-
-            for(int i=0;i<this.labels.size();i++){
-                if(this.labels.get(i).getConfidenceValue() <= prob - 0.10)
-                    break;
-
-                newLabels.add(this.labels.get(i));
-            }
-
-            this.labels = newLabels;
-
-        }
 
     }
 

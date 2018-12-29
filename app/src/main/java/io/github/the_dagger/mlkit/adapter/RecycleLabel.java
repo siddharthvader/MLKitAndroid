@@ -25,7 +25,6 @@ public class RecycleLabel {
         else{
             this.objectLabel = l;
             this.properBin = "Trash";
-//            confidenceValue = 0.6;
             this.confidenceValue = label.getConfidence();
         }
 
