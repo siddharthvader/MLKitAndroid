@@ -15,7 +15,7 @@ import io.github.the_dagger.mlkit.adapter.RecycleLabelAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_image_label.*
 import com.google.firebase.ml.vision.label.FirebaseVisionLabel
-
+import io.github.the_dagger.mlkit.adapter.BinLabelProcessor
 
 
 class ImageLabelActivity : BaseCameraActivity() {
@@ -38,11 +38,18 @@ class ImageLabelActivity : BaseCameraActivity() {
                 .addOnSuccessListener {
                     // Task completed successfully
                     fabProgressCircle.hide()
-                    val relabels = RecycleLabel(it);
+//                    val relabels = RecycleLabel(it);
+                    for(item in it){
+                        itemsList.add(RecycleLabel(item))
+                    }
 //                    itemsList.addAll(it)
-                    itemsList.add(relabels)
+//                    val reLabels: List<Any> = ArrayList()
+//                    itemsList.add(relabels)
 //                    itemAdapter = ImageLabelAdapter(itemsList, false)
-                    itemAdapter = RecycleLabelAdapter(itemsList, false)
+                    val processor: BinLabelProcessor = BinLabelProcessor(itemsList)
+                    val items = processor.labels
+//                    itemAdapter = RecycleLabelAdapter(itemsList, false)
+                    itemAdapter = RecycleLabelAdapter(items, false)
                     rvLabel.adapter = itemAdapter
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
                 }

@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">MlKit</string>
+    <!-- string name="app_name">MlKit</string -->
+    <string name="app_name">Recycleable</string>
     <string name="detected_items">Detected Items</string>
     <string name="desc_text">A simple credit card scanner that reads the card number and expiry date</string>
     <string name="desc_face">Load and run a custom TensorflowLite model</string>

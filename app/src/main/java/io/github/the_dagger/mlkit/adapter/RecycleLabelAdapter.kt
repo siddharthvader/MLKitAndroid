@@ -38,12 +38,12 @@ class RecycleLabelAdapter(private val firebaseVisionList: List<Any>, private val
 
         fun bindDevice(currentItem: RecycleLabel) {
             when {
-                currentItem.confidence == "High" -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.green))
-                currentItem.confidence == "Low" -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.red))
+                currentItem.confidenceValue > 0.80 -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.green))
+                currentItem.confidenceValue < 0.30 -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.red))
                 else -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.orange))
             }
 //            itemView.itemName.text = currentItem.objectLabel
-            itemView.itemName.text = currentItem.properBin
+            itemView.itemName.text = currentItem.objectLabel.capitalize() + " \u2192 " + currentItem.properBin
             itemView.itemAccuracy.text = "Probability : ${(currentItem.confidenceValue * 100).toInt()}%"
         }
 
