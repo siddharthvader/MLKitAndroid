@@ -1,1 +1,1 @@
-Using Google's Vision API to help people recycle better
+Using Google's Firebase MLKit API to help people recycle better
