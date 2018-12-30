@@ -20,6 +20,10 @@ public class BinLabelProcessor {
             this.labels.add(l);
         }
 
+        // Add one more entry to the list which is a link to the google search
+        String linkText = "<a href='http://google.com'>Learn More</a> about recycling in your area";
+        RecycleLabel learnMore = new RecycleLabel(linkText, "", 0.0);
+        this.labels.add(learnMore);
 
     }
 

@@ -1,11 +1,14 @@
 package io.github.the_dagger.mlkit.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.text.Html
+import android.net.Uri
 import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel
 import com.google.firebase.ml.vision.label.FirebaseVisionLabel
 import io.github.the_dagger.mlkit.R
@@ -28,14 +31,21 @@ class RecycleLabelAdapter(private val firebaseVisionList: List<Any>, private val
 
 
         fun bindDevice(currentItem: RecycleLabel) {
-            when {
-                currentItem.confidenceValue > 0.80 -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.green))
-                currentItem.confidenceValue < 0.30 -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.red))
-                else -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.orange))
-            }
 
-            itemView.itemName.text = currentItem.objectLabel.capitalize() + " \u2192 " + currentItem.properBin
-            itemView.itemAccuracy.text = "Probability : ${(currentItem.confidenceValue * 100).toInt()}%"
+            if(currentItem.objectLabel.contains("http")){
+                itemView.itemName.text = Html.fromHtml(currentItem.objectLabel)
+                itemView.itemAccuracy.text = "Turn on location for most relevant results"
+            }
+            else {
+                when {
+                    currentItem.confidenceValue > 0.80 -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.green))
+                    currentItem.confidenceValue < 0.30 -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.red))
+                    else -> itemView.itemAccuracy.setTextColor(ContextCompat.getColor(context, R.color.orange))
+                }
+
+                itemView.itemName.text = currentItem.objectLabel.capitalize() + " \u2192 " + currentItem.properBin
+                itemView.itemAccuracy.text = "Probability : ${(currentItem.confidenceValue * 100).toInt()}%"
+            }
         }
 
     }
@@ -44,8 +54,19 @@ class RecycleLabelAdapter(private val firebaseVisionList: List<Any>, private val
         val currentItem = firebaseVisionList[position]
         if (isCloud)
             holder.bindCloud(currentItem as FirebaseVisionCloudLabel)
-        else
+        else {
             holder.bindDevice(currentItem as RecycleLabel)
+
+            if(position==itemCount-1) {
+                holder.itemView.itemName.setOnClickListener {
+                    val link = "https://google.com/search?q=What+can+I+recycle"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(link)
+                    context.startActivity(intent)
+                }
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleLabelAdapter.ItemHolder {
